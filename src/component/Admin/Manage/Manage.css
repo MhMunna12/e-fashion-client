@@ -1,0 +1,23 @@
+.table-tr{
+    background-color: #dbf6e9;
+    padding: 10px;
+}
+
+.manage-container{
+    background-color: rgb(236, 233, 233);
+    min-height: 400px;
+}
+.manage-container h3{
+    margin: 5px;
+}
+.manage-area{
+    background-color: white;
+    border-radius: 10px;
+    width: 90%;
+    margin:0px 50px;
+    padding: 10px;
+}
+.icon-color{
+    color: tomato;
+    font-weight: bolder;
+}
