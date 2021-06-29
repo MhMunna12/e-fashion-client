@@ -13,55 +13,61 @@ if (firebase.apps.length === 0) {
 const Login = () => {
     const [loggedInUser, setLoggedInUser] = useContext(UserContext);
     const [newUser, setNewUser] = useState(false);
-    const [user, setUser] = useState({
-        isSignedIn: false,
-        // newUser: false,
-        name: '',
-        email: '',
-        photo: '',
-        error: '',
-        success: false
-    })
 
     const history = useHistory();
     const location = useLocation();
     let { from } = location.state || { from: { pathname: "/" } };
-    
+     const checkAdmin = (email) =>{
+
+        fetch('https://warm-reef-27135.herokuapp.com/isAdmin', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        })
+            .then(res => res.json())
+            .then(data => {
+                const loggedInfo = {...loggedInUser};
+                loggedInfo.isAdmin = data;
+                setLoggedInUser(loggedInfo);
+            })
+
+     }
 
     const handleSubmit = (e) =>{
-        if(newUser && user.email && user.password){
-            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        if(newUser && loggedInUser.email && loggedInUser.password){
+            firebase.auth().createUserWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
             .then(res => {
-                const newUserInfo = {...user}
+                const newUserInfo = {...loggedInUser}
                 newUserInfo.error = '';
                 newUserInfo.success = true;
-                setUser(newUserInfo);
-                updateUserName(user.name);
+                setLoggedInUser(newUserInfo);
+                // updateUserName(loggedInUser.name);
             })
             .catch((error) => {
-                const newUserInfo = {...user}
+                const newUserInfo = {...loggedInUser}
                 newUserInfo.error = error.message;
                 newUserInfo.success = false;
-                setUser(newUserInfo);
+                setLoggedInUser(newUserInfo);
                 
             });
         }
-        if(!newUser && user.email && user.password){
-            firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+        if(!newUser && loggedInUser.email && loggedInUser.password){
+            firebase.auth().signInWithEmailAndPassword(loggedInUser.email, loggedInUser.password)
             .then(res => {
-                const newUserInfo = {...user}
+                const newUserInfo = {...loggedInUser}
                 newUserInfo.error = '';
                 newUserInfo.success = true;
-                setUser(newUserInfo);
                 setLoggedInUser(newUserInfo);
+                // setLoggedInUser(newUserInfo);
                 history.replace(from);
-                console.log('sing userInfo', res.user)
+                checkAdmin(loggedInUser.email);
+                console.log('sing userInfo', res.loggedInUser);
             })
             .catch((error) => {
-                const newUserInfo = {...user}
+                const newUserInfo = {...loggedInUser}
                 newUserInfo.error = error.message;
                 newUserInfo.success = false;
-                setUser(newUserInfo)
+                loggedInUser(newUserInfo)
             });
         }
         e.preventDefault();
@@ -89,9 +95,9 @@ const Login = () => {
             isFormValid = e.target.value.length > 6
         }
         if(isFormValid){
-            const newUserInfo = {...user}
+            const newUserInfo = {...loggedInUser}
             newUserInfo[e.target.name] = e.target.value;
-            setUser(newUserInfo);
+            setLoggedInUser(newUserInfo);
         }
     }
     return (
@@ -111,8 +117,8 @@ const Login = () => {
                                 <input  className="submit" type="submit" value={newUser ? 'Sign Up':'Sign In'} />
                                 <p>{newUser? "Already":"Don't"} Have An account? <Link onClick={()=> setNewUser(!newUser)} >{newUser ? "Login" : "Create An Account"}</Link></p>
                             </form>
-                            <p style={{color: 'red'}}>{user.error}</p>
-                            {user.success && <p style={{color: 'green'}}>User {newUser? "Create":'Logged In' } SuccessFully</p>}
+                            <p style={{color: 'red'}}>{loggedInUser.error}</p>
+                            {loggedInUser.success && <p style={{color: 'green'}}>User {setLoggedInUser? "Create":'Logged In' } SuccessFully</p>}
                         </div>
                     </div>
                 </div>

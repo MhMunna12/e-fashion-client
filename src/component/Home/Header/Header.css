@@ -1,0 +1,9 @@
+
+.banner{
+    background-image: url(../../../images/g-2.jpg);
+    background-size:   100% 100%;
+    background-repeat: no-repeat;
+    /* text-align: center; */
+    color: white;
+    padding:140px;
+}

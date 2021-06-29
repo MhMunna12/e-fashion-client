@@ -5,7 +5,7 @@
 
 // const Dashboard = () => {
 //     const [loggedInUser, setLoggedInUser] = useContext(UserContext);  
-//     const [isAdmin, setIsAdmin] = useState(false);
+//     // const [isAdmin, setIsAdmin] = useState(false);
 
 //     useEffect(() => {
 //         fetch('https://warm-reef-27135.herokuapp.com/isAdmin' ,{
